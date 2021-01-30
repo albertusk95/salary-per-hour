@@ -4,6 +4,7 @@
 
 - MySQL 8.0.21
 - Python 3.6.5
+- Pandas 0.24.2
 
 ---
 
