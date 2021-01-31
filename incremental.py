@@ -84,7 +84,7 @@ def compute_salary_per_hour(df: pd.DataFrame):
 					'employee_salary': 'total_employee_salary'})
 
 	salary_per_hour_df["salary_per_hour"] = salary_per_hour_df["total_employee_salary"] \
-								/ salary_per_hour_df["total_work_hours_in_month_all_employees"]
+					/ salary_per_hour_df["total_work_hours_in_month_all_employees"]
 
 	return salary_per_hour_df
 
