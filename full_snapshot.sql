@@ -7,7 +7,7 @@ USE salary_per_hour_db;
 
 DROP TABLE IF EXISTS salary_per_hour;
 
-CREATE TABLE salary_per_hour (
+CREATE TABLE salary_per_hour_fullsnapshot (
 	work_month CHAR(2) NOT NULL, 
 	work_year CHAR(4) NOT NULL, 
 	employee_branch_id INT NOT NULL, 
@@ -16,17 +16,18 @@ CREATE TABLE salary_per_hour (
 	salary_per_hour DECIMAL(20, 3)
 );
 
-INSERT IGNORE INTO salary_per_hour(work_month, work_year, employee_branch_id, total_work_hours_in_month_all_employees, total_employee_salary, salary_per_hour)
+INSERT IGNORE INTO salary_per_hour_fullsnapshot(work_month, work_year, employee_branch_id, total_work_hours_in_month_all_employees, total_employee_salary, salary_per_hour)
 WITH complete_timesheets AS (
 	SELECT * 
 	FROM timesheets 
 	WHERE checkin <> '' AND checkout <> ''
-), added_date_to_check_in_out_timesheets as ( 
-	select cts.*, if(timestampdiff(second, checkin, checkout)<0, STR_TO_DATE(concat(date+INTERVAL 1 DAY, ' ', checkout), '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(concat(date, ' ', checkout), '%Y-%m-%d %H:%i:%s')) as checkout_dt, STR_TO_DATE(concat(date, ' ', checkin), '%Y-%m-%d %H:%i:%s') as checkin_dt 
-	from complete_timesheets cts 
+), valid_checkin_checkout_difference as ( 
+	SELECT *
+	FROM complete_timesheets cts
+	WHERE TIME_TO_SEC(cts.checkout) - TIME_TO_SEC(cts.checkin) >= 0
 ), computed_num_work_hours_in_day as (
-	select dtts.*, timestampdiff(second, checkin_dt, checkout_dt)/3600 as num_of_work_hours_in_day
-	from added_date_to_check_in_out_timesheets dtts
+	select vcd.*, (TIME_TO_SEC(vcd.checkout) - TIME_TO_SEC(vcd.checkin)) / 3600 as num_of_work_hours_in_day
+	from valid_checkin_checkout_difference vcd
 ), employee_service_length AS (
 	SELECT MONTH(cnwh.date) as work_month, YEAR(cnwh.date) as work_year, emp.salary as employee_salary, emp.branch_id as employee_branch_id, emp.employee_id as employee_id, count(*) as total_work_days_in_month, SUM(cnwh.num_of_work_hours_in_day) as total_work_hours_in_month
 	FROM computed_num_work_hours_in_day cnwh 
