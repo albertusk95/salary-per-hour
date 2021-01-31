@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS salary_per_hour;
+DROP DATABASE IF EXISTS salary_per_hour_db;
 
-CREATE DATABASE salary_per_hour;
+CREATE DATABASE salary_per_hour_db;
 
-USE salary_per_hour;
+USE salary_per_hour_db;
 
 CREATE TABLE employees (
 	employee_id INT NOT NULL,

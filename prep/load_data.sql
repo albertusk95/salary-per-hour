@@ -1,4 +1,4 @@
-USE salary_per_hour;
+USE salary_per_hour_db;
 
 LOAD DATA LOCAL INFILE '../data/employees.csv' 
 INTO TABLE employees 
