@@ -56,21 +56,21 @@ def compute_employee_service_length(df: pd.DataFrame):
 	df[['date_y', 'date_m', 'date_d']] = df["date"].str.split('-', 3, expand=True)
 
 	return df \
-	.join(employees_df.set_index("employee_id"), on="employee_id", how="left") \
-	.groupby(["date_m", "date_y", "employee_id"]) \
-	.agg({
-		'timesheet_id': 'count', 
-		'num_of_work_hours_in_day': 'sum', 
-		'branch_id': 'mean', 
-		'salary': 'mean'}) \
-	.reset_index() \
-	.rename(columns={
-			'date_m': 'work_month',
-			'date_y': 'work_year',
-			'timesheet_id':'total_work_days_in_month', 
-			'num_of_work_hours_in_day': 'total_work_hours_in_month', 
-			'branch_id': 'employee_branch_id', 
-			'salary': 'employee_salary'})
+		.join(employees_df.set_index("employee_id"), on="employee_id", how="left") \
+		.groupby(["date_m", "date_y", "employee_id"]) \
+		.agg({
+			'timesheet_id': 'count', 
+			'num_of_work_hours_in_day': 'sum', 
+			'branch_id': 'mean', 
+			'salary': 'mean'}) \
+		.reset_index() \
+		.rename(columns={
+				'date_m': 'work_month',
+				'date_y': 'work_year',
+				'timesheet_id':'total_work_days_in_month', 
+				'num_of_work_hours_in_day': 'total_work_hours_in_month', 
+				'branch_id': 'employee_branch_id', 
+				'salary': 'employee_salary'})
 
 def compute_salary_per_hour(df: pd.DataFrame):
 	salary_per_hour_df = df \
@@ -84,7 +84,7 @@ def compute_salary_per_hour(df: pd.DataFrame):
 					'employee_salary': 'total_employee_salary'})
 
 	salary_per_hour_df["salary_per_hour"] = salary_per_hour_df["total_employee_salary"] \
-											/ salary_per_hour_df["total_work_hours_in_month_all_employees"]
+								/ salary_per_hour_df["total_work_hours_in_month_all_employees"]
 
 	return salary_per_hour_df
 
