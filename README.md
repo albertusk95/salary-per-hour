@@ -62,13 +62,13 @@ Several points to note why this approach is selected:
 
 - Make sure you have installed the `Use Techs` in your machine.
 - There are two scripts:
-  - `full_snapshot.sql`: run daily and read all the data.
+  - `full_snapshot.sql`: run daily, <b>read all the data</b> and <b>overwrite</b> the destination table.
       - Go to `prep` folder. There is a runner script called `load.sh`
       - Run `chmod +x load.sh`
       - Run `./load.sh`
       - <b>You will be prompted for password three times</b>
       - The result will be stored to `salary_per_hour_fullsnapshot` table
-  - `incremental.py`: run daily (assume to be at 23:59:59) and read only the new data.
+  - `incremental.py`: run daily, <b>only read the new data</b> and <b>append</b> the result to the destination table.
       - Run `python incremental.py -u <USERNAME> -p <PASSWORD> -ho <HOST> -po <PORT> -db <DB_NAME>`.
       	Default values: `host = localhost`, `port=3306`, `db=salary_per_hour_db`
       - The result will be stored to `salary_per_hour_incremental` table
