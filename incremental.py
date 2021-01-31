@@ -104,8 +104,6 @@ def transform_data(employees_df: pd.DataFrame, timesheets_df: pd.DataFrame):
 	# compute salary per hour
 	salary_per_hour_df = compute_salary_per_hour(employee_service_length_df)
 
-	print(salary_per_hour_df)
-
 	return salary_per_hour_df
 
 
